@@ -8,7 +8,7 @@
   const emits = defineEmits(['definir-presupuesto'])
 
   const definirPresupuesto = () => {
-    if(presupuesto.value <= 0) {
+    if(presupuesto.value <= 0 || presupuesto.value === '') {
       error.value = 'Presupuesto no valido'
 
       setTimeout(() => {
