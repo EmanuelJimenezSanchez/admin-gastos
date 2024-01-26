@@ -61,7 +61,9 @@
 </script>
 
 <template>
-  <div>
+  <div
+    :class="{ fijar: modal.mostrar }"
+  >
     <header>
       <h1>Planificador de Gastos</h1>
 
@@ -150,6 +152,11 @@
 
   header {
     background-color: var(--azul);
+  }
+
+  .fijar {
+    overflow: hidden;
+    height: 100vh;
   }
 
   header h1 {
