@@ -1,11 +1,14 @@
 <script setup>
   import { ref } from "vue"
   import Presupuesto from "./components/Presupuesto.vue"
+  import ControlPresupuesto from "./components/ControlPresupuesto.vue";
 
   const presupuesto = ref(0)
+  const disponible = ref(0)
 
   const definirPresupuesto = (cantidad) => {
     presupuesto.value = cantidad
+    disponible.value = cantidad
   }
 </script>
 
@@ -20,7 +23,11 @@
           v-on:definir-presupuesto="definirPresupuesto"
         />
 
-        <p v-else>Presupuesto Valido</p>
+        <ControlPresupuesto
+          v-else
+          v-bind:presupuesto="presupuesto"
+          v-bind:disponible="disponible"
+        />
       </div>
       
     </header>
