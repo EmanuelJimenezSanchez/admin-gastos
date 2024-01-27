@@ -16,6 +16,8 @@
       required: true
     }
   })
+
+  defineEmits(['reiniciar-app'])
 </script>
 
 <template>
@@ -29,6 +31,7 @@
     <div class="contenedor-presupuesto">
       <button
         class="reset-app"
+        @click="$emit('reiniciar-app')"
       >Resetear App</button>
 
       <p>

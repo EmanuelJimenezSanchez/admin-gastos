@@ -116,6 +116,14 @@
     }
   }
 
+  const reiniciarApp = () => {
+    localStorage.clear()
+    presupuesto.value = 0
+    disponible.value = 0
+    gastos.value = []
+    filtro.value = ''
+  }
+
   const gastosFiltrados = computed(() => {
     if (filtro.value) {
       return gastos.value.filter(gasto => gasto.categoria === filtro.value)
@@ -143,7 +151,7 @@
           v-bind:presupuesto="presupuesto"
           v-bind:disponible="disponible"
           :gastado="gastado"
-
+          @reiniciar-app="reiniciarApp"
         />
       </div>
       
