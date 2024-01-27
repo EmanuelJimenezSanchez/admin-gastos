@@ -1,5 +1,7 @@
 <script setup>
-  import imagen from '../assets/img/grafico.jpg'
+  import { computed } from 'vue'
+  import CircleProgress from 'vue3-circle-progress'
+  import 'vue3-circle-progress/dist/circle-progress.css'
   import { formatearCantidad } from '../helpers'
 
   const props = defineProps({
@@ -18,13 +20,24 @@
   })
 
   defineEmits(['reiniciar-app'])
+
+  const calcularPorcentaje = computed(() => {
+    return parseInt((props.gastado / props.presupuesto) * 100)
+  })
 </script>
 
 <template>
   <div class="dos-columnas">
     <div class="contenedor-grafico">
-      <img 
-        v-bind:src="imagen"
+      <p class="porcentaje">{{ calcularPorcentaje }}%</p>
+
+      <CircleProgress
+        :percent="calcularPorcentaje"
+        :size="250"
+        :border-width="20"
+        :border-bg-width="20"
+        fill-color="#3b82f6"
+        empty-color="#e1e1e1"
       />
     </div>
 
@@ -53,6 +66,23 @@
 </template>
 
 <style scoped>
+  .contenedor-grafico {
+    position: relative;
+  }
+
+  .porcentaje {
+    position: absolute;
+    margin: auto;
+    top: calc(50% - 1.5rem);
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 100;
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--gris-oscuro);
+  }
+
   .dos-columnas {
     display: flex;
     flex-direction: column;
