@@ -44,21 +44,36 @@
     }, 300)
   }
 
-  const ocultarModal = () => {
+  const ocultarModal = () => {  
     modal.animar = false
     setTimeout(() => {
       modal.mostrar = false
+      resetGasto()
     }, 300)
   }
 
   const guardarGasto = () => {
-    const id = generarId()
-    gastos.value.push({ ...gasto, id })
+    if (gasto.id) {
+      // Edicion del registro
+      const { id } = gasto
+      const indice = gastos.value.findIndex(gasto => gasto.id === id)
+
+      gastos.value[indice] = { ...gasto }
+
+    } else {
+      // Registro nuevo
+      const id = generarId()
+      gastos.value.push({ ...gasto, id })
+    }   
 
     // ocultar el modal
     ocultarModal()
 
     // Reiniciar el state de gasto
+    resetGasto()
+  }
+
+  const resetGasto = () => {
     Object.assign(gasto, {
       nombre: "",
       cantidad: "",
@@ -66,6 +81,12 @@
       id: null,
       fecha: Date.now()
     })
+  }
+
+  const seleccionarGasto = (id) => {
+    const gastoEditar = gastos.value.filter(gasto => gasto.id === id)[0]
+    Object.assign(gasto, gastoEditar)
+    mostrarModal()
   }
 </script>
 
@@ -101,6 +122,7 @@
           v-for="gasto in gastos"
           :key="gasto.id"
           :gasto="gasto"
+          @seleccionar-gasto="seleccionarGasto"
         />
       </div>
 
@@ -121,6 +143,7 @@
         v-model:nombre="gasto.nombre"
         v-model:cantidad="gasto.cantidad"
         v-model:categoria="gasto.categoria"
+        v-model:id="gasto.id"
       />
     </main>
   </div>

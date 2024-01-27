@@ -27,12 +27,18 @@
     disponible: {
       type: Number,
       required: true
+    },
+    id: {
+      type: [String, null],
+      required: true
     }
   })
 
+  const old = props.cantidad ? props.cantidad : 0
+
   const agregarGasto = () => {
     // Validar que no haya campor vacios
-    const { cantidad, categoria, nombre, disponible } = props
+    const { cantidad, categoria, nombre, disponible, id } = props
 
     if ([nombre, cantidad, categoria].includes('')) {
       error.value = 'Todos los campos son obligatorios'
@@ -54,7 +60,7 @@
     }
 
     // Validar que el gasto no sea mayor a lo dispinible
-    if (cantidad > disponible) {
+    if (cantidad > disponible + old) {
       error.value = 'Has excedido el presupuesto'
 
       setTimeout(() => {
@@ -85,7 +91,7 @@
         class="nuevo-gasto"
         @submit.prevent="agregarGasto"
       >
-        <legend>Añadir Gasto</legend>
+        <legend>{{ id ? 'Guardar Cambios' : 'Añadir Gasto'}}</legend>
 
         <Alerta v-if="error">
           {{ error }}
@@ -131,7 +137,10 @@
           </select>
         </div>
 
-        <input type="submit" value="Añadir Gasto">
+        <input 
+          type="submit" 
+          :value="[ id ? 'Guardar Cambios' : 'Añadir Gasto']"
+        >
       </form>
     </div>
   </div>
