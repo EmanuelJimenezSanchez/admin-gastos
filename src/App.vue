@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, reactive, watch } from "vue"
+  import { ref, reactive, watch, onMounted } from "vue"
   import Presupuesto from "./components/Presupuesto.vue"
   import ControlPresupuesto from "./components/ControlPresupuesto.vue";
   import Modal from "./components/Modal.vue"
@@ -28,13 +28,30 @@
     const totalGastado = gastos.value.reduce((total, gasto) => total + gasto.cantidad, 0)
     gastado.value = totalGastado
     disponible.value = presupuesto.value - totalGastado
+    localStorage.setItem('gastos', JSON.stringify(gastos.value))
   }, {
     deep: true
+  })
+
+  onMounted(() => {
+    const presupuestoLocalStorage = JSON.parse(localStorage.getItem('presupuesto'))
+    const gastosLocalStorage = JSON.parse(localStorage.getItem('gastos'))
+  
+    if (presupuestoLocalStorage) {
+      presupuesto.value = presupuestoLocalStorage
+      disponible.value = presupuestoLocalStorage
+    }
+
+    if (gastosLocalStorage) {
+      gastos.value = gastosLocalStorage
+    }
   })
 
   const definirPresupuesto = (cantidad) => {
     presupuesto.value = cantidad
     disponible.value = cantidad
+
+    localStorage.setItem('presupuesto', JSON.stringify(presupuesto.value))
   }
 
   const mostrarModal = () => {
@@ -88,6 +105,14 @@
     Object.assign(gasto, gastoEditar)
     mostrarModal()
   }
+
+  const eliminarGasto = (id) => {
+    if (confirm('Eliminar?')) {
+      const indice = gastos.value.findIndex(gasto => gasto.id === id)
+      gastos.value.splice(indice, 1) 
+      ocultarModal()
+    }
+  }
 </script>
 
 <template>
@@ -138,6 +163,7 @@
         v-if="modal.mostrar"
         @ocultar-modal="ocultarModal"
         @guardar-gasto="guardarGasto"
+        @eliminar-gasto="eliminarGasto"
         :modal="modal"
         :disponible="disponible"
         v-model:nombre="gasto.nombre"
